@@ -21,13 +21,18 @@ jobs:
 # The next 3 steps are for building the web application to be tested and starting the web server on the runner environment
 
       - name: 'Checkout the repository'
-        uses: actions/AutomationProject@v2
+        uses: actions/checkout@v2
 
-      - name: 'Building web application to be tested'
-        run: npm install
-
-      - name: 'Running application under test'
-        run: .Proj1/src/test/java/com/browserstack -p 8099 &
+      - uses: actions/checkout@v3
+      
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+          cache: maven
+      - name: Build with Maven
+        run: mvn -B package --file pom.xml
 
       - name: 'Running test on BrowserStack'  # Invokes the actual test script that would run on BrowserStack browsers
         run: node LocalTest.java  # See sample test script above
